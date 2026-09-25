@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+
+    <style>
+        /* ===== BOOKING PAGE STYLES ===== */
+            .booking-wrap {
+                max-width: 720px;
+                margin: 0 auto;
+                padding: 2rem 2.5rem;
+            }
+            .booking-wrap h2 {
+                font-family: var(--font-display);
+                font-size: 26px;
+                font-weight: 800;
+                margin-bottom: 1.5rem;
+            }
+            .flight-selected {
+                background: linear-gradient(135deg, var(--mid), var(--blue));
+                border: 1px solid rgba(56, 189, 248, .3);
+                border-radius: var(--r-lg);
+                padding: 1.4rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1.5rem;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, .3);
+            }
+            .sel-route {
+                font-family: var(--font-display);
+                font-size: 24px;
+                font-weight: 800;
+            }
+            .sel-detail {
+                font-size: 13px;
+                color: var(--gray-300);
+                margin-top: 4px;
+            }
+            .sel-price {
+                font-family: var(--font-display);
+                font-size: 28px;
+                font-weight: 800;
+                color: var(--gold);
+            }
+            .form-section {
+                /* background: rgba(10, 22, 40, .9); */
+                background: #854e4e52;
+                border: 1px solid rgba(255, 255, 255, .08);
+                border-radius: var(--r-lg);
+                padding: 1.4rem;
+                margin-bottom: 14px;
+            }
+            .form-section-title {
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                color: var(--gray-300);
+                margin-bottom: 1.2rem;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .form-section-title:before {
+                content: '';
+                width: 16px;
+                height: 2px;
+                background: var(--cyan);
+                border-radius: 1px;
+            }
+            .form-2col {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+            .f-field {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                margin-bottom: 10px;
+            }
+            .f-field label {
+                font-size: 11px;
+                font-weight: 600;
+                color: var(--gray-300);
+                letter-spacing: .5px;
+            }
+            .f-field input, .f-field select {
+                background: rgba(255, 255, 255, .05);
+                /* border: 1px solid rgba(255, 255, 255, .1); */
+                border: 3px solid #000;
+                border-radius: var(--r);
+                padding: 10px 14px;
+                color: var(--white);
+                font-size: 14px;
+                font-family: var(--font-body);
+                outline: none;
+                transition: all .2s;
+            }
+            .f-field input:focus, .f-field select:focus {
+                border-color: rgba(56, 189, 248, .5);
+                background: rgba(56, 189, 248, .06);
+            }
+            .f-field input::placeholder {
+                color: var(--gray-500);
+            }
+            .f-field select option {
+                background: var(--deep);
+            }
+            .price-break {
+                border-top: 1px solid rgba(255, 255, 255, .06);
+                padding-top: 1rem;
+                margin-top: .5rem;
+            }
+            .price-row {
+                display: flex;
+                justify-content: space-between;
+                font-size: 13px;
+                padding: 5px 0;
+                color: var(--gray-300);
+            }
+            .price-row.total {
+                color: var(--white);
+                font-weight: 600;
+                font-size: 15px;
+                border-top: 1px solid rgba(255, 255, 255, .1);
+                margin-top: 4px;
+                padding-top: 8px;
+            }
+            .confirm-btn {
+                width: 100%;
+                padding: 16px;
+                margin-top: 4px;
+                background: linear-gradient(135deg, var(--green), #059669);
+                border: none;
+                border-radius: var(--r);
+                color: var(--white);
+                font-size: 16px;
+                font-weight: 700;
+                cursor: pointer;
+                font-family: var(--font-display);
+                transition: all .3s;
+                letter-spacing: .3px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                box-shadow: 0 4px 24px rgba(16, 185, 129, .3);
+            }
+            .confirm-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 32px rgba(16, 185, 129, .5);
+            }
+
+
+            /*  */
+            .seat-grid{
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            gap:15px;
+            margin-top:20px;
+        }
+
+        .seat{
+            padding:20px;
+            text-align:center;
+            background:#4CAF50;
+            color:white;
+            border-radius:10px;
+            cursor:pointer;
+        }
+
+        .booked{
+            background:red;
+            cursor:not-allowed;
+        }
+
+        .selected{
+            background:orange;
+        }
+    </style>
+
+    <body>
+
+
+        <!-- BOOKING FORM SECTION FROM index.html -->
+
+    <form id="bookingForm">
+
+        <div id="seats" class="seat-grid"></div>
+
+        <div class="form-section">
+            <div class="form-section-title">Traveller 1 — Primary</div>
+            <div class="form-2col">
+                <div class="f-field"><label>First Name</label><input id="passenger_name" placeholder="Muhammad"></div>
+                <div class="f-field"><label>Last Name</label><input id="b_lname" placeholder="Khan"></div>
+            </div>
+            <div class="form-2col">
+            <div class="f-field"><label>CNIC / Passport No.</label><input id="cnic" placeholder="42101-1234567-1"></div>
+            <div class="f-field"><label>Date of Birth</label><input type="date" id="dob"></div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="form-section-title">Contact Information</div>
+            <div class="form-2col">
+                <div class="f-field"><label>Phone Number</label><input id="phone" placeholder="+92 300 0000000"></div>
+                <div class="f-field"><label>Email Address</label><input id="email" type="email"></div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="form-section-title">Preferences</div>
+            <div class="form-2col">
+            <div class="f-field"><label>Cabin Class</label>
+                <select id="cabin"><option>Economy</option><option>Business</option><option>First Class</option></select>
+            </div>
+            <div class="f-field"><label>Meal Preference</label>
+                <select id="meal"><option>Standard</option><option>Halal</option><option>Vegetarian</option><option>No Meal</option></select>
+            </div>
+            </div>
+        </div>
+
+        <button type="submit">APPLY</button>
+    </form>
+
+        <div class="form-section">
+            <div class="form-section-title">Price Summary</div>
+            <div id="priceBreak"></div>
+            <div class="price-break" id="priceTotal"></div>
+        </div>
+
+
+        <script>
+
+            let selectedSeat = "";
+
+            async function loadSeats(){
+
+                const response = await fetch("/seats");
+                const seats = await response.json();
+
+                const container = document.getElementById("seats");
+
+                container.innerHTML = "";
+
+                seats.forEach(seat => {
+
+                    const div = document.createElement("div");
+
+                    div.classList.add("seat");
+
+                    if(seat.is_booked === 1){
+                        div.classList.add("booked");
+                    }
+
+                    div.innerText = seat.seat_no;
+
+                    if(seat.is_booked === 0){
+
+                        div.addEventListener("click", () => {
+
+                            document.querySelectorAll(".seat")
+                                .forEach(s => s.classList.remove("selected"));
+
+                            div.classList.add("selected");
+
+                            selectedSeat = seat.seat_no;
+
+                            document.getElementById("seat_no").value =
+                                seat.seat_no;
+                        });
+                    }
+
+                    container.appendChild(div);
+                });
+            }
+
+            document
+            .getElementById("bookingForm")
+            .addEventListener("submit", async function(e){
+
+                e.preventDefault();
+
+                const passenger_name =
+                    document.getElementById("passenger_name").value;
+
+                const seat_no =
+                    document.getElementById("seat_no").value;
+
+                const cnic =
+                    document.getElementById("cnic").value;
+                const dob =
+                    document.getElementById("dob").value;
+                const phone =
+                    document.getElementById("phone").value;
+                const email =
+                    document.getElementById("email").value;
+                const cabin =
+                    document.getElementById("cabin").value;
+                const meal =
+                    document.getElementById("meal").value;
+                
+
+                const response = await fetch("/book-seat", {
+
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+
+                    body:JSON.stringify({
+                        passenger_name,
+                        seat_no,
+                        cnic,
+                        dob,
+                        phone,
+                        email,
+                        cabin,
+                        meal
+                    })
+                });
+
+                const result = await response.json();
+
+                alert(result.message);
+
+                loadSeats();
+
+                document.getElementById("bookingForm").reset();
+            });
+
+            loadSeats();
+
+        </script>
+
+        
+    </body>
+
+</html>
